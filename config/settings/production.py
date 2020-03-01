@@ -105,6 +105,13 @@ VERSATILEIMAGEFIELD_SETTINGS = {
     "create_images_on_demand": False,
 }
 
+# PRODUCTION LOGGING
+# -------------------
+LOGGING['loggers']['socialhome']['level'] = env(
+    "LOGGING_LEVEL_SOCIALHOME", default="WARNING")
+LOGGING['loggers']['federation']['level'] = env(
+    "LOGGING_LEVEL_FEDERATION", default="WARNING")
+
 # SENTRY
 # ------
 # If you wish to configure Sentry for error reporting, first create your

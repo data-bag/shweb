@@ -485,6 +485,12 @@ LOGGING = {
     }
 }
 
+for logger in LOGGING["loggers"]:
+    key = 'LOGGING_LEVEL_' + logger.upper().replace('.', '_')
+    if key in env:
+        LOGGING["loggers"][logger]["level"] = env(key)
+del key,logger
+
 if log_target == "syslog":
     LOGGING["handlers"]["syslog"] = {
         "level": env("SOCIALHOME_SYSLOG_LEVEL", default="INFO"),
