@@ -13,7 +13,7 @@
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-else v-html="content.rendered" />
 
-        <reactions-bar :content="content">
+        <reactions-bar v-if="showReactionsBar" :content="content">
             <div v-if="!showAuthorBar" class="stream-element-content-timestamp mr-2">
                 <content-timestamp :content="content" />
             </div>
@@ -58,12 +58,18 @@ const StreamElement = {
         disableLoadMore() {
             return this.$store.state.stream.pending.contents || !this.content.hasLoadMore
         },
+        showReactionsBar() {
+            return this.$store.state.application.isUserAuthenticated
+        },
         showAuthorBar() {
+            if (!this.$store.state.application.isUserAuthenticated) {
+                return false
+            }
             if (this.content.content_type === "reply") {
                 // Always show author bar for replies
                 return true
             }
-            if (this.$store.state.application.isUserAuthenticated && !this.content.user_is_author) {
+            if (!this.content.user_is_author) {
                 // Always show if authenticated and not own content
                 return true
             }

@@ -11,8 +11,17 @@
             <stream-element class="grid-item grid-item-full" :content="singleContent" />
         </div>
         <div v-else>
-            <div class="stamped">
+            <div v-if="this.$store.state.application.isUserAuthenticated" class="stamped">
                 <component :is="stampedElement" />
+            </div>
+            <div v-else-if="streamName == 'profile_pinned'">
+                <stream-element
+                    v-for="content in $store.getters['stream/contentList']"
+                    :key="content.id"
+                    class="stamped grid-item"
+                    :content="content"
+                    @loadmore="loadStream"
+                />
             </div>
             <div
                 v-if="showProfileStreamButtons"
@@ -20,7 +29,12 @@
             >
                 <ProfileStreamButtons />
             </div>
-            <div v-masonry class="grid" v-bind="masonryOptions">
+            <div
+                v-if="this.$store.state.application.isUserAuthenticated || streamName != 'profile_pinned'"
+                v-masonry
+                class="grid"
+                v-bind="masonryOptions"
+            >
                 <div class="grid-sizer" />
                 <div class="gutter-sizer" />
                 <stream-element
@@ -99,7 +113,8 @@ export default Vue.component("stream", {
             return this.$store.state.stream.contents[this.$store.state.stream.singleContentId]
         },
         showProfileStreamButtons() {
-            return this.streamName === "profile_all" || this.streamName === "profile_pinned"
+            return this.$store.state.application.isUserAuthenticated && (
+                this.streamName === "profile_all" || this.streamName === "profile_pinned")
         },
         stampedElement() {
             switch (this.streamName) {
