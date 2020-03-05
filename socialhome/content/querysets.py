@@ -1,11 +1,12 @@
 from typing import Dict, Tuple, TYPE_CHECKING, Any
 
+from django.conf import settings
 from django.db import models
 from django.db.models import Q, F, OuterRef, Subquery, Case, When, ObjectDoesNotExist
 
 from socialhome.content.enums import ContentType
 from socialhome.enums import Visibility
-from socialhome.users.models import User
+from socialhome.users.models import User, Profile
 
 if TYPE_CHECKING:
     from socialhome.content.models import Content
@@ -199,7 +200,14 @@ class ContentQuerySet(models.QuerySet):
         # type: (User) -> ContentQuerySet
         """Filter by visibility to given user."""
         if not user.is_authenticated:
-            return self.filter(visibility=Visibility.PUBLIC)
+            qs = self.filter(visibility=Visibility.PUBLIC)
+            if settings.SOCIALHOME_ROOT_PROFILE:
+                profile = Profile.objects.get(user__username=settings.SOCIALHOME_ROOT_PROFILE)
+                qs = qs.filter(
+                    Q(author=profile) |
+                    Q(shares__author=profile)
+                )
+            return qs
         return self.filter(
             Q(author=user.profile) |
             Q(visibility__in=[Visibility.SITE, Visibility.PUBLIC]) |
