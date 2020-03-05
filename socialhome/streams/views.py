@@ -84,7 +84,7 @@ class LimitedStreamView(LoginRequiredMixin, BaseStreamView):
         return meta
 
 
-class LocalStreamView(BaseStreamView):
+class LocalStreamView(LoginRequiredMixin, BaseStreamView):
     stream_class = LocalStream
 
     def get_page_meta(self):
@@ -97,7 +97,7 @@ class LocalStreamView(BaseStreamView):
         return meta
 
 
-class PublicStreamView(BaseStreamView):
+class PublicStreamView(LoginRequiredMixin, BaseStreamView):
     stream_class = PublicStream
 
     def get_page_meta(self):
