@@ -80,7 +80,7 @@
                             <i class="fa fa-gear" aria-label="{% trans "Menu" %}"></i>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbar-menu"
-                        	 style="right: 0; left: auto;">
+                        	{% if not request.user.is_authenticated %}style="right: 0; left: auto;"{% endif %}>
                             {% if request.user.is_authenticated %}
                                 <a class="dropdown-item" href="{% url "dynamic_preferences.user" %}">{% trans "Account" %}</a>
                                 <a class="dropdown-item" href="{% url "users:api-token" %}">{% trans "API token" %}</a>
