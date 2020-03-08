@@ -64,6 +64,7 @@ EMAIL_SSL_CERTFILE = env("DJANGO_EMAIL_SSL_CERTFILE", default=None)
 EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default='[Socialhome] ')
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
+EMAIL_FILE_PATH = env("DJANGO_EMAIL_FILE_PATH", default="/tmp")
 
 # TEMPLATE CONFIGURATION
 # ------------------------------------------------------------------------------
